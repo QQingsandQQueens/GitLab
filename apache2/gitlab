@@ -1,0 +1,25 @@
+
+LoadModule passenger_module /usr/local/lib/ruby/gems/2.0.0/gems/passenger-4.0.40/buildout/apache2/mod_passenger.so
+   <IfModule mod_passenger.c>
+     PassengerRoot /usr/local/lib/ruby/gems/2.0.0/gems/passenger-4.0.40
+     PassengerDefaultRuby /usr/local/bin/ruby
+   </IfModule>
+ 
+<VirtualHost *:80>
+	ServerName localhost
+ 
+ 	# Point this to your public folder of teambox
+  	DocumentRoot /home/git/gitlab/public
+ 
+	ProxyPass /gitlab/ http://localhost:8081/
+	ProxyPassReverse /gitlab/ http://localhost:8081/
+ 
+  	<Proxy *>
+    		Order deny,allow
+    		Allow from all
+  	</Proxy>
+ 
+  	# Custom log file locations
+  	ErrorLog  /var/log/apache2/gitlab_error.log
+  	CustomLog /var/log/apache2/gitlab_access.log combined
+</VirtualHost>
